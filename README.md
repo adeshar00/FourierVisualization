@@ -1,6 +1,8 @@
 #About
 
-This is a visualization tool I threw together to help myself figure out why the Cooley-Tukey fast fourier transform algorithm works.  It allows a user to see how modifying values in the frequency domain effect the signal domain (which is two-dimensional in this implementation, allowing for asymmetry in the frequency domain).  It can be played with [here](http://adeshar00.github.io/FourierVisualization).
+This is a visualization tool I threw together to help myself figure out why the Cooley-Tukey fast fourier transform algorithm works.  It allows a user to see how modifying values in the frequency domain effect the signal domain (which is two-dimensional in this implementation, allowing for asymmetry in the frequency domain).
+
+It can be played with [here](http://adeshar00.github.io/FourierVisualization).
 
 
 #How to Use
