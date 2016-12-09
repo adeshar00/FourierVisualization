@@ -45,8 +45,8 @@ for(i=0;i<samples;i++)
 	freq[i].vis = false;
 }
 
-freq[0].x = -20;
-freq[0].y = 30;
+freq[0].x = 0;
+freq[0].y = 50;
 freq[0].vis = true;
 freq[1].x = 70;
 freq[1].y = 0;
@@ -253,7 +253,7 @@ function zeroFrequencies()
 //}}}
 
 
-// Draw
+// drawMain
 //{{{
 function drawMain(canvas)
 {
@@ -320,16 +320,25 @@ function drawMain(canvas)
 		var sx;
 		var sy;
 		ctx.beginPath();
-		for(t=0;t<samples;t++)
+		var magic = 32 // TODO
+		for(t=0;t<magic*samples;t++)
 		{
 			var ex = 0;
 			var ey = 0;
-			for(f=0;f<samples;f++)
+			for(f=0;f<samples/2;f++)
 			{
-				ex+= freq[f].x*Math.cos(1.0*f*t/samples*2*Math.PI);
-				ey+= freq[f].x*Math.sin(1.0*f*t/samples*2*Math.PI);
-				ey+= freq[f].y*Math.cos(1.0*f*t/samples*2*Math.PI);
-				ex-= freq[f].y*Math.sin(1.0*f*t/samples*2*Math.PI);
+				ex+= freq[f].x*Math.cos(1.0*f*t/samples/magic*2*Math.PI);
+				ey+= freq[f].x*Math.sin(1.0*f*t/samples/magic*2*Math.PI);
+				ey+= freq[f].y*Math.cos(1.0*f*t/samples/magic*2*Math.PI);
+				ex-= freq[f].y*Math.sin(1.0*f*t/samples/magic*2*Math.PI);
+			}
+			for(f=samples/2;f<samples;f++)
+			{
+				var nf = f-samples;
+				ex+= freq[f].x*Math.cos(1.0*nf*t/samples/magic*2*Math.PI);
+				ey+= freq[f].x*Math.sin(1.0*nf*t/samples/magic*2*Math.PI);
+				ey+= freq[f].y*Math.cos(1.0*nf*t/samples/magic*2*Math.PI);
+				ex-= freq[f].y*Math.sin(1.0*nf*t/samples/magic*2*Math.PI);
 			}
 
 			if(t==0)
@@ -473,7 +482,8 @@ function drawFreqs(canvas)
 	var f;
 	for(f=0;f<samples;f++)
 	{
-		var offset = shrink*(samppow - firstOne(f,samppow));
+		var fo = firstOne(f,samppow)
+		var offset = shrink*(samppow - fo);
 		offset = (offset>(fbrad-2))? fbrad-2 : offset;
 		var x = left+(right-left)*(((f-1+samples/2)%samples)+1)/samples;
 		var y = bot+offset;
@@ -497,10 +507,13 @@ function drawFreqs(canvas)
 		ctx.strokeStyle = "#000000";
 		ctx.stroke();
 
-		ctx.fillStyle = "#000000";
-		ctx.font = fbrad+"px Arial";
-		var lab = (f>samples/2)?(f-samples):(f);
-		ctx.fillText("W "+lab,x-fbrad,bot+2*fbrad);
+		if(samppow-fo<5)
+		{
+			ctx.fillStyle = "#000000";
+			ctx.font = fbrad+"px Arial";
+			var lab = (f>samples/2)?(f-samples):(f);
+			ctx.fillText("W "+lab,x-fbrad,bot+2*fbrad);
+		}
 	}
 
 }
